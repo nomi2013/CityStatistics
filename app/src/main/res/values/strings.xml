@@ -1,0 +1,22 @@
+<resources>
+  <string name="app_name">CityStatistics</string>
+  <string name="action_settings">Settings</string>
+  <string name="action_sort_by_name">Sort By Name</string>
+  <string name="action_sort_by_population">Sort By Population</string>
+  <string name="action_sort_creation_date">Sort By Creation Date</string>
+  <string name="city_name">City name</string>
+  <string name="city_population">City population</string>
+  <string name="state">State</string>
+  <string name="save">Save</string>
+  <string name="cancel">Cancel</string>
+  <string name="empty_city">Empty city name.</string>
+  <string name="invalid_population_data">Invalid population data.</string>
+  <string name="empty_state">Empty state.</string>
+  <string name="city_save_message">City save successfully.</string>
+  <string name="city_name_exist">City name already exist.</string>
+  <string name="delete">Delete</string>
+  <string name="city_colon">City :\u0020</string>
+  <string name="state_colon">State :\u0020</string>
+  <string name="undo">UNDO</string>
+  <string name="removed_from_list">\u0020 removed from list!</string>
+</resources>

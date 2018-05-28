@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  tools:context="com.nk.citystatistics.ui.cities.CityListActivity">
+  <item
+    android:id="@+id/action_sort_name"
+    android:orderInCategory="100"
+    android:title="@string/action_sort_by_name"
+    app:showAsAction="never" />
+
+  <item
+    android:id="@+id/action_sort_population"
+    android:orderInCategory="100"
+    android:title="@string/action_sort_by_population"
+    app:showAsAction="never" />
+
+  <item
+    android:id="@+id/action_sort_creation_date"
+    android:orderInCategory="100"
+    android:title="@string/action_sort_creation_date"
+    app:showAsAction="never" />
+</menu>

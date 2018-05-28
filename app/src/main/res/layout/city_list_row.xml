@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_row_background"
+    android:id="@+id/view_background">
+
+    <ImageView
+      android:id="@+id/delete_icon"
+      android:layout_width="@dimen/_40sdp"
+      android:layout_height="@dimen/_40sdp"
+      android:layout_marginEnd="@dimen/_10sdp"
+      android:layout_marginRight="@dimen/_10sdp"
+      android:src="@drawable/ic_delete_white_24dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/_10sdp"
+      android:layout_marginRight="@dimen/_10sdp"
+      android:layout_centerVertical="true"
+      android:text="@string/delete"
+      android:textColor="#fff"
+      android:textSize="@dimen/_13ssp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/delete_icon"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.5" />
+
+  </android.support.constraint.ConstraintLayout>
+
+  <android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:id="@+id/view_foreground">
+
+    <TextView
+      android:id="@+id/tvCityName"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/_16sdp"
+      android:layout_marginStart="@dimen/_16sdp"
+      android:layout_marginLeft="@dimen/_16sdp"
+      android:text=""
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+      android:id="@+id/tvState"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/_16sdp"
+      android:layout_marginBottom="@dimen/_16sdp"
+      android:text=""
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/tvCityName"
+      app:layout_constraintTop_toBottomOf="@+id/tvCityName" />
+    <TextView
+      android:id="@+id/tvPopulation"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="0dp"
+      android:layout_marginEnd="@dimen/_20sdp"
+      android:layout_marginRight="@dimen/_20sdp"
+      android:text=""
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="@+id/tvCityName" />
+  </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>
