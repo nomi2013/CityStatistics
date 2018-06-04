@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface CityListMvpView extends MvpView{
 
-    void showErroMessage(String msg);
+    void showErrorMessage(String msg);
     void dataSaveSuccessfully(CityInfo cityInfo);
     void dataSavingError(Throwable e);
     void getAllCitiesFailed(Throwable t);
@@ -17,4 +17,6 @@ public interface CityListMvpView extends MvpView{
     void getAllCitiesData(List<CityInfo> cityInfo);
 
     void sortedCityData(List<CityInfo> infoList);
+
+    void validationSuccessfull(CityInfo cityInfo);
 }

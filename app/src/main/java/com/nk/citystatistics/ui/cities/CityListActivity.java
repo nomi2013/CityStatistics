@@ -2,34 +2,36 @@ package com.nk.citystatistics.ui.cities;
 
 import android.database.sqlite.SQLiteConstraintException;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View.OnClickListener;
+import android.view.View;
 import com.nk.citystatistics.R;
 import com.nk.citystatistics.application.CityStatisticsApplication;
 import com.nk.citystatistics.base.BaseActivity;
+import com.nk.citystatistics.db.CityStatisticsDatabase;
 import com.nk.citystatistics.db.model.CityInfo;
 import com.nk.citystatistics.dialog.CityInputDialogFragment;
 import com.nk.citystatistics.event.MessageEvent;
 import com.nk.citystatistics.event.MessageEvent.saveStatus;
 import com.nk.citystatistics.ui.cities.adapter.CityAdapter;
+import com.nk.citystatistics.utils.AppConstant;
 import com.nk.citystatistics.utils.ToastUtils;
+import io.reactivex.Scheduler;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Named;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -37,7 +39,7 @@ import org.greenrobot.eventbus.ThreadMode;
 public class CityListActivity extends BaseActivity implements CityListMvpView,
         View.OnClickListener, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
-    private static String TAG_DIALOG = "dialog";
+    private  String TAG_DIALOG = "dialog";
 
     @Inject
     CityListPresenter presenter;
@@ -47,6 +49,18 @@ public class CityListActivity extends BaseActivity implements CityListMvpView,
 
     @Inject
     CityAdapter cityAdapter;
+
+    @Inject
+    CityStatisticsDatabase database;
+
+    @Inject
+    @Named(AppConstant.MAIN_THREAD)
+    Scheduler mainThread;
+
+
+    @Inject
+    @Named(AppConstant.NEW_THREAD)
+    Scheduler newThread;
 
     private RecyclerView recyclerView;
 
@@ -59,11 +73,11 @@ public class CityListActivity extends BaseActivity implements CityListMvpView,
 
         recyclerView = findViewById(R.id.rcv);
 
-        ((FloatingActionButton) findViewById(R.id.btnFab)).setOnClickListener(this);
+        (findViewById(R.id.btnFab)).setOnClickListener(this);
 
         eventBus.register(this);
         presenter.attachView(this);
-        presenter.getAllValue();
+        presenter.getAllValue(database, mainThread, newThread);
 
         setUpRecyclerView();
 
@@ -81,11 +95,11 @@ public class CityListActivity extends BaseActivity implements CityListMvpView,
         int itemId = item.getItemId();
 
         if (itemId == R.id.action_sort_name) {
-            presenter.sortCityName(infoList);
+            presenter.sortCityName(mainThread, newThread, infoList);
         } else if (itemId == R.id.action_sort_population) {
-            presenter.sortPopulation(infoList);
+            presenter.sortPopulation(mainThread, newThread, infoList);
         } else if (itemId == R.id.action_sort_creation_date) {
-            presenter.sortCreationDate(infoList);
+            presenter.sortCreationDate(mainThread, newThread, infoList);
         }
 
         return super.onOptionsItemSelected(item);
@@ -113,7 +127,7 @@ public class CityListActivity extends BaseActivity implements CityListMvpView,
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(CityInfo cityInfo) {
         if (cityInfo != null) {
-            presenter.saveCity(cityInfo);
+            presenter.validateForm(applicationContext, cityInfo);
         }
     }
 
@@ -146,12 +160,9 @@ public class CityListActivity extends BaseActivity implements CityListMvpView,
                         .make(recyclerView, name + getString(R.string.removed_from_list), Snackbar.LENGTH_LONG);
                 snackbar.setAction(R.string.undo,
                         view -> cityAdapter.restoreItem(deletedItem, deletedIndex, recyclerView));
-                snackbar.setAction("OK", new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        cityAdapter.restoreItem(deletedItem, deletedIndex, recyclerView);
-                        isToRemoveFromDb = false;
-                    }
+                snackbar.setAction("OK", v -> {
+                    cityAdapter.restoreItem(deletedItem, deletedIndex, recyclerView);
+                    isToRemoveFromDb = false;
                 });
 
                 snackbar.setActionTextColor(Color.YELLOW);
@@ -161,7 +172,7 @@ public class CityListActivity extends BaseActivity implements CityListMvpView,
                     @Override
                     public void onDismissed(Snackbar snackbar, int event) {
                         if (isToRemoveFromDb) {
-                            presenter.removeCity(deletedItem);
+                            presenter.removeCity(database, mainThread, newThread, deletedItem);
                         }
                         isToRemoveFromDb = true;
                     }
@@ -184,8 +195,13 @@ public class CityListActivity extends BaseActivity implements CityListMvpView,
 
 
     @Override
-    public void showErroMessage(String msg) {
+    public void showErrorMessage(String msg) {
         ToastUtils.showToastMessageNormal(applicationContext, msg);
+    }
+
+    @Override
+    public void validationSuccessfull(CityInfo cityInfo) {
+        presenter.saveData(database, mainThread, newThread, cityInfo);
     }
 
     @Override

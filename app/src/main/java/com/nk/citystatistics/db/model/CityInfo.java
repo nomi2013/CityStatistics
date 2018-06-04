@@ -1,5 +1,9 @@
 package com.nk.citystatistics.db.model;
 
+import static android.arch.persistence.room.ColumnInfo.NOCASE;
+
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.ColumnInfo.Collate;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
@@ -12,6 +16,7 @@ public class CityInfo {
 
     @PrimaryKey
     @NonNull
+    @ColumnInfo(collate = NOCASE)
     public String cityName;
     public int cityPopulation;
     public String state;

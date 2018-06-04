@@ -5,7 +5,6 @@ import com.nk.citystatistics.R;
 import com.nk.citystatistics.db.CityStatisticsDatabase;
 import com.nk.citystatistics.db.model.CityInfo;
 import com.nk.citystatistics.mvp.BasePresenter;
-import com.nk.citystatistics.utils.AppConstant;
 import com.nk.citystatistics.utils.StringUtils;
 import io.reactivex.Completable;
 import io.reactivex.Scheduler;
@@ -15,31 +14,20 @@ import io.reactivex.observers.DisposableCompletableObserver;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by Noman Khan on 28/05/18.
  */
 public class CityListPresenter extends BasePresenter<CityListMvpView> {
 
-    @Inject
-    CityStatisticsDatabase database;
-
-    @Inject
-    @Named(AppConstant.MAIN_THREAD)
-    Scheduler mainThread;
-
-
-    @Inject
-    @Named(AppConstant.NEW_THREAD)
-    Scheduler newThread;
 
     @Inject
     CityListPresenter(){
 
     }
 
-    public void getAllValue()  {
+    public void getAllValue(CityStatisticsDatabase database, Scheduler mainThread,
+            Scheduler newThread)  {
         database.cityDao().getAllCities()
                 .observeOn(mainThread)
                 .subscribeOn(newThread)
@@ -63,43 +51,58 @@ public class CityListPresenter extends BasePresenter<CityListMvpView> {
 
     }
 
-    public void saveCity(final CityInfo cityInfo) {
-        Context ctx = (Context)getMvpView();
+    public void validateForm(Context context, final CityInfo cityInfo) {
 
-        if (StringUtils.isEmpty(cityInfo.getCityName())) {
-            getMvpView().showErroMessage(ctx.getString(R.string.empty_city));
+        if (StringUtils.isEmpty(cityInfo.getCityName().trim())) {
+            getMvpView().showErrorMessage(context.getString(R.string.empty_city));
             return;
         } else if (StringUtils.emptyLength(cityInfo.getCityPopulation())) {
-            getMvpView().showErroMessage(ctx.getString(R.string.invalid_population_data));
+            getMvpView().showErrorMessage(context.getString(R.string.invalid_population_data));
             return;
-        } else if (StringUtils.isEmpty(cityInfo.getState())) {
-            getMvpView().showErroMessage(ctx.getString(R.string.empty_state));
+        } else if (StringUtils.isEmpty(cityInfo.getState().trim())) {
+            getMvpView().showErrorMessage(context.getString(R.string.empty_state));
             return;
         }
 
+        getMvpView().validationSuccessfull(cityInfo);
 
+    }
+
+
+    public void saveData(CityStatisticsDatabase database, Scheduler mainThread,
+            Scheduler newThread, CityInfo cityInfo) {
         Completable.fromAction(() -> database.cityDao().insertCity(cityInfo))
                 .observeOn(mainThread)
                 .subscribeOn(newThread)
                 .subscribe(new DisposableCompletableObserver() {
-            @Override
-            public void onComplete() {
-                getMvpView().dataSaveSuccessfully(cityInfo);
-                if (!isDisposed())this.dispose();
+                    @Override
+                    public void onComplete() {
+                        if (getMvpView() != null) getMvpView().dataSaveSuccessfully(cityInfo);
+                        if (!isDisposed())this.dispose();
 
-            }
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                getMvpView().dataSavingError(e);
-                if (!isDisposed())this.dispose();
+                    @Override
+                    public void onError(Throwable e) {
+                        try {
+                            if (getMvpView() != null) getMvpView().dataSavingError(e);
+                            if (!isDisposed())this.dispose();
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
 
-            }
-        });
-
+                    }
+                });
     }
 
-    public void sortCityName(List<CityInfo> infoList) {
+    public void sortCityName(Scheduler mainThread,
+            Scheduler newThread, List<CityInfo> infoList) {
+
+        if(infoList.size() == 1) {
+            getMvpView().sortedCityData(infoList);
+            return;
+        }
+
 
         Completable.fromAction(() -> Collections.sort(infoList,
                 (o1, o2) -> o1.cityName.compareTo(o2.cityName)))
@@ -115,18 +118,24 @@ public class CityListPresenter extends BasePresenter<CityListMvpView> {
 
                     @Override
                     public void onError(Throwable e) {
+                        getMvpView().showErrorMessage(e.getMessage());
                         if (!isDisposed())this.dispose();
-
                     }
                 });
 
 
     }
 
-    public void sortPopulation(List<CityInfo> infoList) {
+    public void sortPopulation(Scheduler mainThread,
+            Scheduler newThread , List<CityInfo> infoList) {
+
+        if(infoList.size() == 1) {
+            getMvpView().sortedCityData(infoList);
+            return;
+        }
 
         Completable.fromAction(() -> Collections.sort(infoList,
-                (o1, o2) -> (int)o1.cityPopulation - o2.cityPopulation))
+                (o1, o2) -> o1.cityPopulation - o2.cityPopulation))
                 .observeOn(mainThread)
                 .subscribeOn(newThread)
                 .subscribe(new DisposableCompletableObserver() {
@@ -148,7 +157,13 @@ public class CityListPresenter extends BasePresenter<CityListMvpView> {
 
     }
 
-    public void sortCreationDate(List<CityInfo> infoList) {
+    public void sortCreationDate(Scheduler mainThread,
+            Scheduler newThread , List<CityInfo> infoList) {
+
+        if(infoList.size() == 1) {
+            getMvpView().sortedCityData(infoList);
+            return;
+        }
 
         Completable.fromAction(() -> Collections.sort(infoList,
                 (o1, o2) -> o1.creationDate.compareTo(o2.creationDate)))
@@ -172,7 +187,8 @@ public class CityListPresenter extends BasePresenter<CityListMvpView> {
 
     }
 
-    public void removeCity(CityInfo cityInfo) {
+    public void removeCity(CityStatisticsDatabase database, Scheduler mainThread,
+            Scheduler newThread ,CityInfo cityInfo) {
         Completable.fromAction(() -> database.cityDao().deleteCity(cityInfo))
                 .observeOn(mainThread)
                 .subscribeOn(newThread)
@@ -190,4 +206,6 @@ public class CityListPresenter extends BasePresenter<CityListMvpView> {
                     }
                 });
     }
+
+
 }
