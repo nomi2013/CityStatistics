@@ -9,25 +9,22 @@ import com.nk.citystatistics.di.DaggerAppComponents;
  * Created by Noman Khan on 27/05/18.
  */
 public class CityStatisticsApplication extends Application {
-    public static AppComponents appComponents;
-    public static CityStatisticsApplication INSTANCE;
+    public  AppComponents appComponents;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        INSTANCE = this;
-        injectDependencies(INSTANCE);
+        injectDependencies(this);
     }
 
-    public static void injectDependencies(CityStatisticsApplication context) {
+    public  void injectDependencies(CityStatisticsApplication context) {
         appComponents = DaggerAppComponents.builder()
                 .appModules(new AppModules(context))
                 .build();
         appComponents.inject(context);
     }
 
-    public static AppComponents getAppComponents() {
+    public  AppComponents getAppComponents() {
         return appComponents;
     }
 

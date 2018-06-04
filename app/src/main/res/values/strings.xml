@@ -19,4 +19,5 @@
   <string name="state_colon">State :\u0020</string>
   <string name="undo">UNDO</string>
   <string name="removed_from_list">\u0020 removed from list!</string>
+  <string name="url_invalid">URL is invalid.</string>
 </resources>

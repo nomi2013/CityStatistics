@@ -1,7 +1,9 @@
 package com.nk.citystatistics.ui.splash;
 
 import android.os.Handler;
+import android.webkit.URLUtil;
 import com.nk.citystatistics.mvp.BasePresenter;
+import com.nk.citystatistics.utils.URLUtils;
 import javax.inject.Inject;
 
 /**
@@ -14,7 +16,20 @@ public class SplashPresenter extends BasePresenter<SplashMvpView> {
 
     }
 
+    @Override
+    public void attachView(SplashMvpView mvpView) {
+        super.attachView(mvpView);
+    }
+
     public void holdScreen() {
         new Handler().postDelayed(() -> getMvpView().openCityListActivity(), 5000);
+    }
+
+    public void checkURL(String url) {
+        if (URLUtils.isNetworkUrl(url)) {
+           getMvpView().urlIsValid(url);
+        } else {
+            getMvpView().urlIsInvalid();
+        }
     }
 }

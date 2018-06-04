@@ -8,4 +8,8 @@ import com.nk.citystatistics.mvp.MvpView;
 public interface SplashMvpView extends MvpView {
 
     void openCityListActivity();
+
+    void urlIsValid(String url);
+
+    void urlIsInvalid();
 }

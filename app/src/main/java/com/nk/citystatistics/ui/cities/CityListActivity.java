@@ -42,8 +42,6 @@ import org.greenrobot.eventbus.ThreadMode;
 public class CityListActivity extends BaseActivity implements CityListMvpView,
         View.OnClickListener, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
-    private  String TAG_DIALOG = "dialog";
-
     @Inject
     CityListPresenter presenter;
 
@@ -123,7 +121,7 @@ public class CityListActivity extends BaseActivity implements CityListMvpView,
 
     @Override
     public void injectDependency() {
-        CityStatisticsApplication.getAppComponents().inject(this);
+        new CityStatisticsApplication().getAppComponents().inject(this);
     }
 
     @Override
@@ -272,13 +270,14 @@ public class CityListActivity extends BaseActivity implements CityListMvpView,
 
     private void showCityInfoDialog() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag(TAG_DIALOG);
+        String tagDialog = "dialog";
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tagDialog);
         if (prev != null) {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
         DialogFragment dialogFragment = new CityInputDialogFragment();
-        dialogFragment.show(ft, TAG_DIALOG);
+        dialogFragment.show(ft, tagDialog);
         dialogFragment.setCancelable(false);
     }
 }

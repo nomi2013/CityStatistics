@@ -8,28 +8,31 @@ import com.nk.citystatistics.R;
 import com.nk.citystatistics.application.CityStatisticsApplication;
 import com.nk.citystatistics.base.BaseActivity;
 import com.nk.citystatistics.ui.cities.CityListActivity;
+import com.nk.citystatistics.utils.ToastUtils;
 import javax.inject.Inject;
 
 public class SplashActivity extends BaseActivity implements SplashMvpView{
 
     @Inject
     SplashPresenter presenter;
+    private ImageView imgGif;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        imgGif = findViewById(R.id.imgSplash);
+
         presenter.attachView(this);
         presenter.holdScreen();
-
-        ImageView imageView = findViewById(R.id.imgSplash);
-        loadGif(imageView);
+        presenter.checkURL("https://media.giphy.com/media/t7sEnf5w7wJ1CEPyy7/giphy.gif");
 
     }
 
 
     @Override
     public void injectDependency() {
-        CityStatisticsApplication.getAppComponents().inject(this);
+        new CityStatisticsApplication().getAppComponents().inject(this);
     }
 
     @Override
@@ -49,14 +52,20 @@ public class SplashActivity extends BaseActivity implements SplashMvpView{
         finish();
     }
 
-    private void loadGif(ImageView imageView) {
+    @Override
+    public void urlIsValid(String url) {
         Glide.with(context)
-                .load("https://media.giphy.com/media/t7sEnf5w7wJ1CEPyy7/giphy.gif")
+                .load(url)
                 .apply(new RequestOptions().placeholder(R.drawable.splash_bg).error(R.drawable
                         .splash_bg).fitCenter().override((int)context.getResources().getDimension
                         (R.dimen._250sdp), (int)context.getResources().getDimension(R.dimen
                         ._250sdp)))
-                .into(imageView);
+                .into(imgGif);
+    }
+
+    @Override
+    public void urlIsInvalid() {
+        ToastUtils.showToastMessageNormal(applicationContext, getString(R.string.url_invalid));
     }
 
 }
