@@ -1,5 +1,7 @@
 package com.nk.citystatistics.ui.cities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteConstraintException;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import com.nk.citystatistics.dialog.CityInputDialogFragment;
 import com.nk.citystatistics.event.MessageEvent;
 import com.nk.citystatistics.event.MessageEvent.saveStatus;
 import com.nk.citystatistics.ui.cities.adapter.CityAdapter;
+import com.nk.citystatistics.ui.splash.SplashActivity;
 import com.nk.citystatistics.utils.AppConstant;
 import com.nk.citystatistics.utils.ToastUtils;
 import io.reactivex.Scheduler;
@@ -66,6 +69,10 @@ public class CityListActivity extends BaseActivity implements CityListMvpView,
 
     private List<CityInfo> infoList;
     private boolean isToRemoveFromDb;
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, CityListActivity.class);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -274,5 +281,4 @@ public class CityListActivity extends BaseActivity implements CityListMvpView,
         dialogFragment.show(ft, TAG_DIALOG);
         dialogFragment.setCancelable(false);
     }
-
 }

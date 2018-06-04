@@ -54,4 +54,7 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:$rootProject.room_version"
     implementation "android.arch.persistence.room:rxjava2:$rootProject.room_version"
     implementation 'org.greenrobot:eventbus:3.1.1'
+    //Glide
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
 }

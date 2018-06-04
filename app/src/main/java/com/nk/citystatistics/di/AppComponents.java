@@ -3,6 +3,7 @@ package com.nk.citystatistics.di;
 import com.nk.citystatistics.application.CityStatisticsApplication;
 import com.nk.citystatistics.dialog.CityInputDialogFragment;
 import com.nk.citystatistics.ui.cities.CityListActivity;
+import com.nk.citystatistics.ui.splash.SplashActivity;
 import dagger.Component;
 import javax.inject.Singleton;
 
@@ -15,4 +16,6 @@ public interface AppComponents {
     void inject(CityStatisticsApplication context);
     void inject(CityListActivity cityListActivity);
     void inject(CityInputDialogFragment cityInputDialogFragment);
+
+    void inject(SplashActivity splashActivity);
 }
