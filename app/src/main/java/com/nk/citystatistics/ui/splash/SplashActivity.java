@@ -8,6 +8,7 @@ import com.nk.citystatistics.R;
 import com.nk.citystatistics.application.CityStatisticsApplication;
 import com.nk.citystatistics.base.BaseActivity;
 import com.nk.citystatistics.ui.cities.CityListActivity;
+import com.nk.citystatistics.utils.AppConstant;
 import com.nk.citystatistics.utils.ToastUtils;
 import javax.inject.Inject;
 
@@ -25,14 +26,14 @@ public class SplashActivity extends BaseActivity implements SplashMvpView{
 
         presenter.attachView(this);
         presenter.holdScreen();
-        presenter.checkURL("https://media.giphy.com/media/t7sEnf5w7wJ1CEPyy7/giphy.gif");
+        presenter.checkURL(AppConstant.GIF_URL);
 
     }
 
 
     @Override
     public void injectDependency() {
-        new CityStatisticsApplication().getAppComponents().inject(this);
+        ((CityStatisticsApplication) getApplication()).getAppComponents().inject(this);
     }
 
     @Override

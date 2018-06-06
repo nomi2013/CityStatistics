@@ -32,7 +32,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
 
         private TextView tvCityName, tvState, tvPopulation;
 
-        public ConstraintLayout viewBackground, viewForeground;
+        private ConstraintLayout viewForeground;
 
         private CityViewHolder(View itemView) {
             super(itemView);
@@ -41,11 +41,12 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
             tvState = itemView.findViewById(R.id.tvState);
             tvPopulation = itemView.findViewById(R.id.tvPopulation);
 
-            viewBackground = itemView.findViewById(R.id.view_background);
             viewForeground = itemView.findViewById(R.id.view_foreground);
         }
 
-
+        public ConstraintLayout getViewForeground() {
+            return viewForeground;
+        }
     }
 
     @NonNull
@@ -81,18 +82,19 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
 
     public void removeItem(int position, RecyclerView rcv) {
         infoList.remove(position);
-        rcv.post(() -> notifyItemRemoved(position));
+        rcv.post(() -> notifyItemRangeRemoved(position, infoList.size()));
     }
 
     public void addItemAtPosition(CityInfo cityInfo, int position, RecyclerView rcv) {
         infoList.add(cityInfo);
-        rcv.post(() -> notifyDataSetChanged());
+        rcv.post(() -> notifyItemRangeInserted(position - 1, position));
+
     }
 
 
     public void restoreItem(CityInfo cityInfo, int position, RecyclerView rcv) {
         infoList.add(position, cityInfo);
-        rcv.post(() -> notifyItemInserted(position));
+        rcv.post(this::notifyDataSetChanged);
 
     }
 

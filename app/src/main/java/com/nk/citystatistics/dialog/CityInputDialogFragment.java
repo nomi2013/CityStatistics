@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import com.nk.citystatistics.R;
 import com.nk.citystatistics.application.CityStatisticsApplication;
@@ -34,7 +33,11 @@ public class CityInputDialogFragment extends DialogFragment implements View.OnCl
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        CityStatisticsApplication.getAppComponents().inject(this);
+        try {
+            ((CityStatisticsApplication) getActivity().getApplication()).getAppComponents().inject(this);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         eventBus.register(this);
     }
 
@@ -60,8 +63,8 @@ public class CityInputDialogFragment extends DialogFragment implements View.OnCl
         edtPopulation = view.findViewById(R.id.edtPopulation);
         edtState = view.findViewById(R.id.edtState);
 
-        ((Button) view.findViewById(R.id.btnCancel)).setOnClickListener(this);
-        ((Button) view.findViewById(R.id.btnSave)).setOnClickListener(this);
+        (view.findViewById(R.id.btnCancel)).setOnClickListener(this);
+        (view.findViewById(R.id.btnSave)).setOnClickListener(this);
 
 
     }

@@ -27,9 +27,9 @@ public class SplashPresenter extends BasePresenter<SplashMvpView> {
 
     public void checkURL(String url) {
         if (URLUtils.isNetworkUrl(url)) {
-           getMvpView().urlIsValid(url);
+            if(getMvpView() != null)getMvpView().urlIsValid(url);
         } else {
-            getMvpView().urlIsInvalid();
+            if(getMvpView() != null)getMvpView().urlIsInvalid();
         }
     }
 }

@@ -121,7 +121,7 @@ public class CityListActivity extends BaseActivity implements CityListMvpView,
 
     @Override
     public void injectDependency() {
-        new CityStatisticsApplication().getAppComponents().inject(this);
+        ((CityStatisticsApplication) getApplication()).getAppComponents().inject(this);
     }
 
     @Override
@@ -157,6 +157,7 @@ public class CityListActivity extends BaseActivity implements CityListMvpView,
 
                 // remove the item from recycler view
                 cityAdapter.removeItem(viewHolder.getAdapterPosition(), recyclerView);
+                infoList.remove(deletedIndex);
 
                 isToRemoveFromDb = true;
 
@@ -165,9 +166,14 @@ public class CityListActivity extends BaseActivity implements CityListMvpView,
                         .make(recyclerView, name + getString(R.string.removed_from_list), Snackbar.LENGTH_LONG);
                 snackbar.setAction(R.string.undo,
                         view -> cityAdapter.restoreItem(deletedItem, deletedIndex, recyclerView));
-                snackbar.setAction("OK", v -> {
-                    cityAdapter.restoreItem(deletedItem, deletedIndex, recyclerView);
-                    isToRemoveFromDb = false;
+                snackbar.setAction(R.string.ok, v -> {
+                    try {
+                        cityAdapter.restoreItem(deletedItem, deletedIndex, recyclerView);
+                        infoList.add(deletedIndex, deletedItem);
+                        isToRemoveFromDb = false;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 });
 
                 snackbar.setActionTextColor(Color.YELLOW);
@@ -215,6 +221,7 @@ public class CityListActivity extends BaseActivity implements CityListMvpView,
         saveStatus.setSave(true);
         eventBus.post(saveStatus);
 
+        infoList.add(cityInfo);
         cityAdapter.addItemAtPosition(cityInfo, infoList.size(), recyclerView);
         ToastUtils.showToastMessageNormal(applicationContext, getString(R.string
                 .city_save_message));

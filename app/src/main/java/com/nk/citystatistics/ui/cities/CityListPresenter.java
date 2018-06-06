@@ -39,12 +39,12 @@ public class CityListPresenter extends BasePresenter<CityListMvpView> {
 
                     @Override
                     public void onSuccess(List<CityInfo> cityInfos) {
-                        getMvpView().getAllCitiesData(cityInfos);
+                        if(getMvpView() != null)getMvpView().getAllCitiesData(cityInfos);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        getMvpView().getAllCitiesFailed(e);
+                        if(getMvpView() != null)getMvpView().getAllCitiesFailed(e);
 
                     }
                 });
@@ -54,17 +54,17 @@ public class CityListPresenter extends BasePresenter<CityListMvpView> {
     public void validateForm(Context context, final CityInfo cityInfo) {
 
         if (StringUtils.isEmpty(cityInfo.getCityName().trim())) {
-            getMvpView().showErrorMessage(context.getString(R.string.empty_city));
+            if(getMvpView() != null)getMvpView().showErrorMessage(context.getString(R.string.empty_city));
             return;
         } else if (StringUtils.emptyLength(cityInfo.getCityPopulation())) {
-            getMvpView().showErrorMessage(context.getString(R.string.invalid_population_data));
+            if(getMvpView() != null)getMvpView().showErrorMessage(context.getString(R.string.invalid_population_data));
             return;
         } else if (StringUtils.isEmpty(cityInfo.getState().trim())) {
-            getMvpView().showErrorMessage(context.getString(R.string.empty_state));
+            if(getMvpView() != null)getMvpView().showErrorMessage(context.getString(R.string.empty_state));
             return;
         }
 
-        getMvpView().validationSuccessfull(cityInfo);
+        if(getMvpView() != null)getMvpView().validationSuccessfull(cityInfo);
 
     }
 
@@ -99,7 +99,7 @@ public class CityListPresenter extends BasePresenter<CityListMvpView> {
             Scheduler newThread, List<CityInfo> infoList) {
 
         if(infoList.size() == 1) {
-            getMvpView().sortedCityData(infoList);
+            if(getMvpView() != null)getMvpView().sortedCityData(infoList);
             return;
         }
 
@@ -112,13 +112,13 @@ public class CityListPresenter extends BasePresenter<CityListMvpView> {
                     @Override
                     public void onComplete() {
                         infoList.size();
-                        getMvpView().sortedCityData(infoList);
+                        if(getMvpView() != null)getMvpView().sortedCityData(infoList);
                         if (!isDisposed())this.dispose();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        getMvpView().showErrorMessage(e.getMessage());
+                        if(getMvpView() != null)getMvpView().showErrorMessage(e.getMessage());
                         if (!isDisposed())this.dispose();
                     }
                 });
@@ -142,7 +142,7 @@ public class CityListPresenter extends BasePresenter<CityListMvpView> {
                     @Override
                     public void onComplete() {
                         infoList.size();
-                        getMvpView().sortedCityData(infoList);
+                        if(getMvpView() != null)getMvpView().sortedCityData(infoList);
                         if (!isDisposed())this.dispose();
 
                     }
@@ -161,7 +161,7 @@ public class CityListPresenter extends BasePresenter<CityListMvpView> {
             Scheduler newThread , List<CityInfo> infoList) {
 
         if(infoList.size() == 1) {
-            getMvpView().sortedCityData(infoList);
+            if(getMvpView() != null)getMvpView().sortedCityData(infoList);
             return;
         }
 
@@ -173,7 +173,7 @@ public class CityListPresenter extends BasePresenter<CityListMvpView> {
                     @Override
                     public void onComplete() {
                         infoList.size();
-                        getMvpView().sortedCityData(infoList);
+                        if(getMvpView() != null)getMvpView().sortedCityData(infoList);
                         if (!isDisposed())this.dispose();
                     }
 
@@ -196,7 +196,6 @@ public class CityListPresenter extends BasePresenter<CityListMvpView> {
                     @Override
                     public void onComplete() {
                         if (!isDisposed())this.dispose();
-
                     }
 
                     @Override

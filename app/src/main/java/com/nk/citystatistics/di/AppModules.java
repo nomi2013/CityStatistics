@@ -19,10 +19,8 @@ import org.greenrobot.eventbus.EventBus;
 
 @Module
 public class AppModules {
-    CityStatisticsApplication myApplication;
+    private CityStatisticsApplication myApplication;
 
-    public AppModules() {
-    }
 
     public AppModules(CityStatisticsApplication myApplication) {
         this.myApplication = myApplication;
