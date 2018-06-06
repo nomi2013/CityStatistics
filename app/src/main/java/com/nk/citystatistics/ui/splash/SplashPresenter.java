@@ -1,7 +1,6 @@
 package com.nk.citystatistics.ui.splash;
 
 import android.os.Handler;
-import android.webkit.URLUtil;
 import com.nk.citystatistics.mvp.BasePresenter;
 import com.nk.citystatistics.utils.URLUtils;
 import javax.inject.Inject;
